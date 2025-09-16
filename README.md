@@ -33,22 +33,41 @@ git clone https://github.com/im-Tree/simple_data_analysis.git
 cd simple_data_analysis
 ```
 
-### 2. Set Up a Virtual Environment  
+### 2. Dev Container Setup (Recommended)
+   1. Open the project in Visual Studio Code.
+   1. Install the Dev Containers extension.
+   1. Reopen the project in the Dev Container:
+      - Open the Command Palette (Ctrl+Shift+P or Cmd+Shift+P on macOS).
+      - Select Dev Containers: Reopen in Container.
+   1. The container will automatically install all dependencies from requirements.txt.  
+     
+### 3. Docker Setup
+   1. Build the Docker image:   
+   ```bash
+   docker build -t gold-price-analysis .
+   ```
+
+   2. Run the container:
+   ```bash
+   docker run --rm -it gold-price-analysis
+   ```
+
+### 4. Manual Setup (Without Dev Container or Docker)
+a. Set Up a Virtual Environment  
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
 ```  
-
-### 3. Install Dependencies  
+b. Install Dependencies  
 ```bash
 make install
 ```  
 
-### n4. Run the Main Script  
+### 5. Run the Main Script  
 ```bash
 make run
 ```  
-### 5. Run Unit Tests   
+### 6. Run Unit Tests   
 ```bash
 make test
 ```   

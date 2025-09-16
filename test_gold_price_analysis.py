@@ -2,6 +2,9 @@ import unittest
 import pandas as pd
 from gold_price_analysis import GoldPriceAnalyzer
 from unittest.mock import patch
+from warnings import filterwarnings
+
+filterwarnings("ignore")
 
 
 class TestGoldPriceAnalyzer(unittest.TestCase):
@@ -36,7 +39,8 @@ class TestGoldPriceAnalyzer(unittest.TestCase):
         returns_df = self.analyzer.calculate_returns()
         self.assertIsNotNone(returns_df)
         self.assertIn("GLD", returns_df.columns)
-        self.assertEqual(len(returns_df), 2)  # 3 rows -> 2 rows after pct_change()
+        # 3 rows -> 2 rows after pct_change()
+        self.assertEqual(len(returns_df), 2)
 
     def test_filter_by_time(self):
         """Test filtering by time range."""
@@ -50,6 +54,15 @@ class TestGoldPriceAnalyzer(unittest.TestCase):
         yearly_mean = self.analyzer.get_yearly_mean(["GLD", "SLV"])
         self.assertIsNotNone(yearly_mean)
         self.assertIn(2025, yearly_mean.index)
+
+    def test_explore_ml_model(self):
+        """Test the machine learning model training and evaluation."""
+        features = ["SPX", "EUR/USD", "SLV"]
+        target = "GLD"
+        model = self.analyzer.explore_ml_model(features, target)
+        self.assertIsNotNone(model)
+        self.assertTrue(hasattr(model, "coef_"), "Model should have coefficients")
+        self.assertTrue(hasattr(model, "intercept_"), "Model should have an intercept")
 
 
 if __name__ == "__main__":
