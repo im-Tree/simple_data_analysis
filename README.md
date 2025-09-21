@@ -71,7 +71,9 @@ make run
 ```bash
 make test
 ```   
-  
+![Screenshot of passed tests](images/passed_test_terminal.png "Screenshot of passed tests")
+
+
 ## Findings  
 1. Gold Price Trends:  
     Gold prices showed a steady increase from 2015 to 2025, with occasional fluctuations. 
