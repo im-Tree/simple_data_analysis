@@ -1,3 +1,5 @@
+[![CI](https://github.com/im-Tree/simple_data_analysis/actions/workflows/main.yml/badge.svg)](https://github.com/im-Tree/simple_data_analysis/actions/workflows/main.yml)
+
 # Gold Price Analysis
 
 This project analyzes gold price data from 2015 to 2025, exploring trends, relationships with other financial instruments, and applying machine learning techniques to predict gold prices. The project also includes data visualization and cumulative return analysis.
