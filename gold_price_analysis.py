@@ -65,8 +65,8 @@ class GoldPriceAnalyzer:
             return None
 
         filtered_df = self.df_gold_data[
-            (self.df_gold_data["Date"] >= start_date)
-            & (self.df_gold_data["Date"] <= end_date)
+            (self.df_gold_data["Date"] >= start_date) & 
+            (self.df_gold_data["Date"] <= end_date)
         ].copy()
         return filtered_df
 
