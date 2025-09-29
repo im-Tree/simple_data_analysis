@@ -11,69 +11,72 @@ from sklearn.metrics import r2_score, mean_squared_error
 class GoldPriceAnalyzer:
     def __init__(self, file_path):
         self.file_path = file_path
-        self.df = self.load_data()
+        self.df_gold_data = self.load_data()
         self.returns_df = self.calculate_returns()
 
     def load_data(self):
         """Loads the CSV file into a pandas DataFrame."""
         try:
-            df = pd.read_csv(self.file_path)
-            df["Date"] = pd.to_datetime(df["Date"])
+            df_gold_data = pd.read_csv(self.file_path)
+            df_gold_data["Date"] = pd.to_datetime(df_gold_data["Date"])
             print("Data loaded successfully.")
-            return df
+            return df_gold_data
         except FileNotFoundError:
             raise FileNotFoundError(f"File not found: {self.file_path}")
 
     def calculate_returns(self):
         """Calculates daily returns for all financial instruments."""
-        if self.df is None:
+        if self.df_gold_data is None:
             return None
 
         # Select all numerical columns except 'Date'
-        numerical_cols = self.df.select_dtypes(include=["float64"]).columns.tolist()
+        numerical_cols = self.df_gold_data.select_dtypes(
+            include=["float64"]
+        ).columns.tolist()
 
         # Calculate percentage change for these columns
-        returns_df = self.df[numerical_cols].pct_change().dropna()
+        returns_df = self.df_gold_data[numerical_cols].pct_change().dropna()
         print("\nDaily returns calculated successfully.")
         return returns_df
 
     def inspect_data(self):
         """Displays key information about the dataset."""
-        if self.df is None:
+        if self.df_gold_data is None:
             return
 
         print("\n--- first 5 rows of the data ---")
-        print(self.df.head())
+        print(self.df_gold_data.head())
 
         print("\n--- data basic info ---")
-        self.df.info()
+        self.df_gold_data.info()
 
         print("\n--- descriptive statistics ---")
-        print(self.df.describe())
+        print(self.df_gold_data.describe())
 
         print("\n--- missing values per column ---")
-        print(self.df.isnull().sum())
+        print(self.df_gold_data.isnull().sum())
 
         print("\n--- total duplicate rows ---")
-        print(self.df.duplicated().sum())
+        print(self.df_gold_data.duplicated().sum())
 
     def filter_by_time(self, start_date, end_date):
         """Filters the DataFrame to include data from a specific year onwards."""
-        if self.df is None:
+        if self.df_gold_data is None:
             return None
 
-        filtered_df = self.df[
-            (self.df["Date"] >= start_date) & (self.df["Date"] <= end_date)
+        filtered_df = self.df_gold_data[
+            (self.df_gold_data["Date"] >= start_date)
+            & (self.df_gold_data["Date"] <= end_date)
         ].copy()
         return filtered_df
 
     def get_yearly_mean(self, column_name):
         """Calculates the mean of a column, grouped by year."""
-        if self.df is None:
+        if self.df_gold_data is None:
             return None
 
-        self.df["Year"] = self.df["Date"].dt.year
-        yearly_mean = self.df.groupby("Year")[column_name].mean()
+        self.df_gold_data["Year"] = self.df_gold_data["Date"].dt.year
+        yearly_mean = self.df_gold_data.groupby("Year")[column_name].mean()
         # yearly_std = self.df.groupby('Year')[column_name].std()
         print(f"\nAverage {column_name} price by year: {yearly_mean}")
         return yearly_mean
@@ -97,8 +100,7 @@ class GoldPriceAnalyzer:
         y_pred = model.predict(X_test)
 
         # Evaluate the model's performance
-        r2 = r2_score(y_test, y_pred)
-        mse = mean_squared_error(y_test, y_pred)
+        r2, mse = self.compute_performance_metrics(y_test, y_pred)
 
         print("\n--- Linear Regression Model Results on Returns ---")
         print("Model Coefficients:")
@@ -111,12 +113,17 @@ class GoldPriceAnalyzer:
 
         return model
 
+    def compute_performance_metrics(self, y_test, y_pred):
+        r2 = r2_score(y_test, y_pred)
+        mse = mean_squared_error(y_test, y_pred)
+        return r2, mse
+
     def create_cumulative_return_plot(self, columns, title):
         """
         Plots the cumulative returns of selected instruments.
         This method remains the same as it already works with returns.
         """
-        if self.df is None:
+        if self.df_gold_data is None:
             return
 
         plt.figure(figsize=(12, 8))
@@ -127,7 +134,7 @@ class GoldPriceAnalyzer:
         for col in columns:
             cumulative_returns = (1 + df_returns[col]).cumprod()
             plt.plot(
-                self.df["Date"].iloc[1:], cumulative_returns, label=col
+                self.df_gold_data["Date"].iloc[1:], cumulative_returns, label=col
             )  # Match date to returns_df
 
         plt.title(title)
@@ -142,7 +149,7 @@ if __name__ == "__main__":
     file_path = "./gold_data_2015_25.csv"
     analyzer = GoldPriceAnalyzer(file_path)
 
-    if analyzer.df is not None:
+    if analyzer.df_gold_data is not None:
         # Step 2: Inspect the Data
         analyzer.inspect_data()
 

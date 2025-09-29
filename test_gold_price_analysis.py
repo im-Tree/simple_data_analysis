@@ -30,9 +30,9 @@ class TestGoldPriceAnalyzer(unittest.TestCase):
 
     def test_load_data(self):
         """Test if data is loaded correctly."""
-        self.assertIsNotNone(self.analyzer.df)
-        self.assertEqual(len(self.analyzer.df), 3)
-        self.assertIn("GLD", self.analyzer.df.columns)
+        self.assertIsNotNone(self.analyzer.df_gold_data)
+        self.assertEqual(len(self.analyzer.df_gold_data), 3)
+        self.assertIn("GLD", self.analyzer.df_gold_data.columns)
 
     def test_calculate_returns(self):
         """Test daily returns calculation."""
