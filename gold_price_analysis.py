@@ -60,13 +60,13 @@ class GoldPriceAnalyzer:
         print(self.df_gold_data.duplicated().sum())
 
     def filter_by_time(self, start_date, end_date):
-        """Filters the DataFrame to include data from a specific year onwards."""
+        """Filters the DataFrame by year."""
         if self.df_gold_data is None:
             return None
 
         filtered_df = self.df_gold_data[
-            (self.df_gold_data["Date"] >= start_date) & 
-            (self.df_gold_data["Date"] <= end_date)
+            (self.df_gold_data["Date"] >= start_date)
+            & (self.df_gold_data["Date"] <= end_date)
         ].copy()
         return filtered_df
 
@@ -134,7 +134,9 @@ class GoldPriceAnalyzer:
         for col in columns:
             cumulative_returns = (1 + df_returns[col]).cumprod()
             plt.plot(
-                self.df_gold_data["Date"].iloc[1:], cumulative_returns, label=col
+                self.df_gold_data["Date"].iloc[1:], 
+                cumulative_returns, 
+                label=col
             )  # Match date to returns_df
 
         plt.title(title)
